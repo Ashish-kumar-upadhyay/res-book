@@ -8,6 +8,10 @@ import { useState } from 'react';
 const ResidentCard = ({ resident }) => {
   const [isHovered, setIsHovered] = useState(false);
 
+  const isValidLinkedInUrl = (url) => {
+    return url && url.trim() !== '' && url.trim().startsWith('https://www.linkedin.com/');
+  };
+
   return (
     <Card
       sx={{
@@ -97,7 +101,7 @@ const ResidentCard = ({ resident }) => {
               gap: 1,
               justifyContent: 'flex-start'
             }}>
-              {resident.linkedinUrl && (
+              {isValidLinkedInUrl(resident.linkedinUrl) && (
                 <IconButton
                   href={resident.linkedinUrl}
                   target="_blank"
@@ -116,7 +120,7 @@ const ResidentCard = ({ resident }) => {
                   <LinkedInIcon />
                 </IconButton>
               )}
-              {resident.twitterUrl && (
+              {resident.twitterUrl && resident.twitterUrl.trim() !== '' && (
                 <IconButton
                   href={resident.twitterUrl}
                   target="_blank"

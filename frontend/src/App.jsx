@@ -64,7 +64,7 @@ function App() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <Box sx={{ 
+        {/* <Box sx={{ 
           background: 'linear-gradient(135deg, #6B46C1 0%, #805AD5 100%)',
           py: 8,
           mb: 6,
@@ -138,7 +138,80 @@ function App() {
               </motion.div>
             </Box>
           </Container>
-        </Box>
+        </Box> */}
+        <Box
+  sx={{
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    width: '100%',
+    zIndex: 1000,
+    backgroundColor: 'rgba(107, 70, 193, 0.6)', // semi-transparent purple
+    backdropFilter: 'blur(10px)',               // glassmorphism effect
+    WebkitBackdropFilter: 'blur(10px)',         // Safari support
+    py: 1.5,
+    px: 2,
+    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
+    borderBottom: '1px solid rgba(255,255,255,0.1)' // subtle divider
+  }}
+>
+  <Container maxWidth="lg">
+    <Typography 
+      variant="h3" 
+      component="h2" 
+      align="center" 
+      sx={{ 
+        color: 'white',
+        fontWeight: 700,
+        mb: 3,
+        textShadow: '2px 2px 4px rgba(0,0,0,0.2)'
+      }}
+    >
+      The Residents Book
+    </Typography>
+    <Typography 
+      variant="h6" 
+      align="center" 
+      sx={{ 
+        color: 'rgba(255,255,255,0.9)',
+        mb: 4,
+        maxWidth: '600px',
+        mx: 'auto'
+      }}
+    >
+      Discover and connect with our amazing community members
+    </Typography>
+    <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+      <motion.div
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        <Button
+          variant="contained"
+          onClick={() => setIsModalOpen(true)}
+          startIcon={<AddIcon />}
+          sx={{
+            backgroundColor: 'white',
+            color: '#6B46C1',
+            px: 4,
+            py: 1.5,
+            fontSize: '1.1rem',
+            fontWeight: 600,
+            borderRadius: '12px',
+            boxShadow: '0 4px 14px rgba(255,255,255,0.2)',
+            '&:hover': {
+              backgroundColor: 'rgba(255,255,255,0.9)',
+            }
+          }}
+        >
+          Add Resident
+        </Button>
+      </motion.div>
+    </Box>
+  </Container>
+</Box>
+
+
       </motion.div>
 
       <Container maxWidth="lg">
@@ -148,9 +221,10 @@ function App() {
           animate="show"
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+            gridTemplateColumns: 'repeat(4, 1fr)',
             gap: '32px',
-            padding: '0 16px'
+            padding: '0 16px',
+            marginTop: '255px'
           }}
         >
           {residents.map((resident) => (

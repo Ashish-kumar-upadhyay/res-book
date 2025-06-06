@@ -36,12 +36,24 @@ const AddResidentModal = ({ open, onClose, onSuccess }) => {
     linkedinUrl: '',
     twitterUrl: '',
   });
+  const [linkedinError, setLinkedinError] = useState('');
+
+  const validateLinkedInUrl = (url) => {
+    if (!url) return true; // Empty URL is valid (optional field)
+    return url.trim().startsWith('https://www.linkedin.com/');
+  };
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
+
+    // Clear LinkedIn error when user starts typing
+    if (name === 'linkedinUrl') {
+      setLinkedinError('');
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -52,13 +64,22 @@ const AddResidentModal = ({ open, onClose, onSuccess }) => {
       return;
     }
 
+    // Validate LinkedIn URL
+    if (formData.linkedinUrl && !validateLinkedInUrl(formData.linkedinUrl)) {
+      setLinkedinError('Please enter a valid LinkedIn URL starting with https://www.linkedin.com/');
+      return;
+    }
+
     try {
       const response = await fetch(`${config.apiUrl}/residents`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          linkedinUrl: formData.linkedinUrl.trim(), // Trim the URL
+        }),
       });
 
       if (!response.ok) {
@@ -82,6 +103,7 @@ const AddResidentModal = ({ open, onClose, onSuccess }) => {
         linkedinUrl: '',
         twitterUrl: '',
       });
+      setLinkedinError('');
     } catch (error) {
       toast.error('Error adding resident');
       console.error('Error:', error);
@@ -147,7 +169,13 @@ const AddResidentModal = ({ open, onClose, onSuccess }) => {
                   { name: 'lastName', label: 'Last Name', required: true },
                   { name: 'title', label: 'Title / Role', required: true },
                   { name: 'profilePhoto', label: 'Profile Photo URL', required: false, helperText: 'Leave empty for default avatar' },
-                  { name: 'linkedinUrl', label: 'LinkedIn URL', required: false },
+                  { 
+                    name: 'linkedinUrl', 
+                    label: 'LinkedIn URL', 
+                    required: false,
+                    error: !!linkedinError,
+                    helperText: linkedinError || 'Must start with https://www.linkedin.com/'
+                  },
                   { name: 'twitterUrl', label: 'Twitter URL', required: false }
                 ].map((field, index) => (
                   <motion.div
@@ -163,6 +191,7 @@ const AddResidentModal = ({ open, onClose, onSuccess }) => {
                       required={field.required}
                       value={formData[field.name]}
                       onChange={handleChange}
+                      error={field.error}
                       helperText={field.helperText}
                       sx={{
                         '& .MuiOutlinedInput-root': {
